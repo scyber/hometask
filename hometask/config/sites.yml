@@ -1,0 +1,6 @@
+- name: 'hub_url'
+  url: 'https://api.github.com'
+  regexp: 'commit'
+- name: 'rate_limit_url'
+  url: 'https://api.github.com/rate_limit'
+  regexp: 'hub'

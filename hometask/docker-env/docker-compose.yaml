@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - 2181:2181
+  kafka:
+    image: wurstmeister/kafka:2.12-2.4.1
+    environment:
+      KAFKA_LISTENERS: INSIDE://kafka:9093,OUTSIDE://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_CREATE_TOPICS: "test:2:1,testjson:2:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - 9092:9092
+    expose:
+      - 9093
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  pg_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=stage
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+

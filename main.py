@@ -18,12 +18,12 @@ if __name__ == '__main__':
         if (sys.argv[1] == 'reader'):
             print('run write data from kafka topics and store to database', sys.argv[1])
             #ToDo periodic run site_reader
-            os.system("tools/site_reader.py 1")
+
 
         elif( sys.argv[1] == 'writer'):
             print('run monitor site and produce records', sys.argv[1])
             #ToDo periodic run site_writer
-            os.system("tools/site_writer.py 1")
+
         else:
             print('Incrorrect param should be in <reader> or <writer>')
     else:

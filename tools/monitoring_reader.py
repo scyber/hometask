@@ -1,15 +1,11 @@
-
 import json
 import logging
 from tools.data import Message
 from kafka import KafkaConsumer
 from tools import db_utils, get_config
 
-logging.basicConfig(level=logging.INFO)
 
-logger = logging.getLogger('Consumer')
-
-#ToDo just started to implement obt to dataclass
+# ToDo just started to implement obt to dataclass
 def obj_decoder(obj):
     if '__type__' in obj == obj['__type__'] == 'Message':
         return Message(obj['site'], obj['resp_time'], obj['resp_code'], obj['patterns'], obj['cur_time'])
@@ -52,9 +48,15 @@ def transfer_message(lg):
     finally:
         consumer.close()
 
-#ToDo check if target database exists and create a table
-db_con = db_utils.get_pg_conn(logger)
-db_utils.init_db(db_con, logger)
-transfer_message(logger)
+
+class MonitorDataReader:
+    def run(self):
+        logging.basicConfig(level=logging.INFO)
+        logger = logging.getLogger('DataReader')
+        db_con = db_utils.get_pg_conn(logger)
+        db_utils.init_db(db_con, logger)
+        transfer_message(logger)
 
 
+data_reader = MonitorDataReader()
+data_reader.run()

@@ -9,7 +9,7 @@ def insert_rec(recive_msg):
     try:
         rec_time = datetime.datetime.strptime(recive_msg.cur_time, "%Y-%m-%d %H:%M:%S")
         loger = logging.getLogger('DB Insert')
-        conn = psycopg2.connect(host="localhost", database="stage", user="postgres", password="secret")
+        conn = get_pg_conn(loger)
         loger.info('Connecting to Database')
         cur = conn.cursor()
         cur.execute("INSERT INTO MONITOR (site_name, response_time, response_code, pattern_text, rec_time) VALUES ( %s, %s, %s, %s, %s);",
@@ -24,12 +24,12 @@ def insert_rec(recive_msg):
             loger.info('Connection to DB closed')
 
 
-def get_one_record():
-    conn = None
+def get_one_record(conn):
+    #conn = None
     loger = logging.getLogger("Current")
     try:
         loger.info('-- start connecting --')
-        conn = psycopg2.connect(host="localhost", database="stage", user="postgres", password="secret")
+        #conn = psycopg2.connect(host="localhost", database="stage", user="postgres", password="secret")
         loger.info('Connecting to Database')
         cur = conn.cursor()
         cur.execute('SELECT * from monitor')
@@ -47,7 +47,7 @@ def get_one_record():
 
 def get_pg_conn(lg):
     db_data = get_config.get_monitor_data().get('db_items')
-    print(db_data)
+    #print(db_data)
     connection = psycopg2.connect(host=db_data.get('db_host'), port=db_data.get('db_port'), database=db_data.get('db_name'), user=db_data.get('db_user_name'), password=db_data.get('db_password'))
     lg.info('Connecting to Database')
     return connection
@@ -80,4 +80,4 @@ lg.info('Finish init db writing ')
 
 #Test instert and select
 #insert_rec()
-get_one_record()
+#get_one_record(con)

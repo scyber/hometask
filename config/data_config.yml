@@ -1,9 +1,13 @@
 kafka:
-  brokers: localhost:9092, 127.0.0.1:9092
+  brokers: kafka-2435445b-unixfan-c2a5.aivencloud.com:19933
   topic: 'test'
+  security_protocol: 'SSL'
+  ssl_cafile_path: '../config/ca.pem'
+  ssl_certfile_path: '../config/service.cert'
+  ssl_keyfile_path: '../config/service.key'
 db_items:
-  db_host: 'localhost'
-  db_port: 5432
-  db_user_name: 'postgres'
-  db_password: 'secret'
-  db_name: 'stage'
+  db_host: 'pg-3b80418-unixfan-c2a5.aivencloud.com'
+  db_port: 19931
+  db_user_name: 'avnadmin'
+  db_password: 'czjhp0eku8ovuoiz'
+  db_name: 'defaultdb'

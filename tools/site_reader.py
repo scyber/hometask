@@ -21,6 +21,10 @@ def get_consumer(lg, data):
     topic = data.get('topic')
     brokers = data.get('brokers').split(',')
     consumer = KafkaConsumer(bootstrap_servers=brokers,
+                             security_protocol=data.get('security_protocol'),
+                             ssl_cafile=data.get('ssl_cafile_path'),
+                             ssl_certfile=data.get('ssl_certfile_path'),
+                             ssl_keyfile=data.get('ssl_keyfile_path'),
                              value_deserializer=lambda v: json.loads(v).encode('utf-8'))
     lg.info('Start susbscribe on topic ')
     consumer.subscribe(topic)
@@ -39,6 +43,7 @@ def transfer_message(lg):
             obj_msg = Message.from_json(bytes_msg)
 
             lg.info('Start inserting to DB')
+            lg.info(obj_msg)
             db_utils.insert_rec(obj_msg)
             lg.info('Finish inserting to DB')
 

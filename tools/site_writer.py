@@ -4,14 +4,19 @@ from kafka import KafkaProducer
 from datetime import datetime
 from tools.data import Message
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 logger = logging.getLogger('Writer logger')
 
 
 def getProducer(lg, data):
     brokers = data.get('brokers').split(',')
+    print(brokers)
     producer = KafkaProducer(bootstrap_servers=brokers,
+                             security_protocol=data.get('security_protocol'),
+                             ssl_cafile=data.get('ssl_cafile_path'),
+                             ssl_certfile=data.get('ssl_certfile_path'),
+                             ssl_keyfile=data.get('ssl_keyfile_path'),
                              value_serializer=lambda v: json.dumps(v).encode('utf-8'))
     log_message = 'producer connected ', producer.bootstrap_connected()
     lg.info(log_message)

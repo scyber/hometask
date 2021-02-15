@@ -10,11 +10,10 @@
 
 It could be done initially in your home or similar directory
 
--- from command line you need create a directory for it
+#Prepare virtual env for run
 # In Linux could be done
 $ mkdir /tmp/task
 $ cd /tmp/task
-
 $ virtualenv task_env
 $ source task_env/bin/activate
 

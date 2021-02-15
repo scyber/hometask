@@ -1,5 +1,5 @@
 import psycopg2, logging, datetime
-import get_config
+from tools import get_config
 
 logging.basicConfig(level=logging.INFO)
 
@@ -73,10 +73,10 @@ def init_db(conn, lg):
 
 # loger = logging.getLogger('Current')
 # loger.info('This is')
-lg = logging.getLogger('Python test')
-con = get_pg_conn(lg)
-init_db(con, lg)
-lg.info('Finish init db writing ')
+#lg = logging.getLogger('Python test')
+#con = get_pg_conn(lg)
+#init_db(con, lg)
+#lg.info('Finish init db writing ')
 
 #Test instert and select
 #insert_rec()

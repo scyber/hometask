@@ -1,8 +1,8 @@
-import json
-import logging
+import json, logging
+
+from kafka import KafkaConsumer, TopicPartition
+from tools import get_config, db_utils
 from tools.data import Message
-from kafka import KafkaConsumer
-from tools import db_utils, get_config
 
 
 # ToDo just started to implement obt to dataclass
@@ -21,32 +21,38 @@ def get_consumer(lg, data):
                              ssl_cafile=data.get('ssl_cafile_path'),
                              ssl_certfile=data.get('ssl_certfile_path'),
                              ssl_keyfile=data.get('ssl_keyfile_path'),
+                             group_id=data.get('group_id'),
                              value_deserializer=lambda v: json.loads(v).encode('utf-8'))
     lg.info('Start susbscribe on topic ')
-    consumer.subscribe(topic)
+    #consumer.subscribe(topic)
     return consumer
 
 
 def transfer_message(lg):
     conf_data = get_config.get_monitor_data()
     consumer = get_consumer(lg, conf_data.get('kafka'))
-
-    # ToDo parce messages and write to DB
+    topic_partion = TopicPartition(conf_data.get('kafka').get('topic'), 0)
+    consumer.assign([topic_partion])
+    consumer.seek_to_end(topic_partion)
+    last_offset = consumer.position(topic_partion)
+    consumer.seek_to_beginning(topic_partion)
     try:
         for msg in consumer:
             print('-- start getting messages ---')
             bytes_msg = msg.value.replace(b"'", b'"')
             obj_msg = Message.from_json(bytes_msg)
-
             lg.info('Start inserting to DB')
             lg.info(obj_msg)
             db_utils.insert_rec(obj_msg)
             lg.info('Finish inserting to DB')
-
-    except Exception as er:
-        lg.error(er.with_traceback())
+            if msg.offset == last_offset - 1:
+                lg.info('Finish reading last offset %s', last_offset)
+                break
+    except Exception as ex:
+        lg.error(ex.args)
     finally:
-        consumer.close()
+        consumer.commit()
+        consumer.close(10)
 
 
 class MonitorDataReader:

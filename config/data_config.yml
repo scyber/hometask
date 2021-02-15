@@ -8,6 +8,6 @@ kafka:
 db_items:
   db_host: 'pg-3b80418-unixfan-c2a5.aivencloud.com'
   db_port: 19931
-  db_user_name: 'avnadmin'
-  db_password: 'czjhp0eku8ovuoiz'
+  db_user_name: 'XXX'
+  db_password: 'XXX'
   db_name: 'defaultdb'

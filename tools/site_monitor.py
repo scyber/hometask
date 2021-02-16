@@ -35,9 +35,8 @@ def process_sites(self, lg, sites_in):
     prd = get_producer(lg, conf_data.get('kafka'))
     for site in sites_in:
         url = site.get('url')
-        lg.info('try connecting to site %s ', url)
+        lg.info('Start processing %s site %s ', url, datetime.now())
         resp = requests.get(url)
-        """Parce Data from response"""
         text = requests.get(url).text
         resp_pattern = parce_text(text, site.get('regexp'))
         msg_cls = Message(url, str(resp.elapsed.microseconds / 10 ** 6), str(resp.status_code), str(resp_pattern),
@@ -59,5 +58,5 @@ class SiteMonitor:
         process_sites(self, logger, sites)
 
 
-site_mon = SiteMonitor()
-site_mon.run()
+#site_mon = SiteMonitor()
+#site_mon.run()

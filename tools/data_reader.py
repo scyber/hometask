@@ -22,12 +22,15 @@ def get_consumer(lg, data):
                              ssl_certfile=data.get('ssl_certfile_path'),
                              ssl_keyfile=data.get('ssl_keyfile_path'),
                              group_id=data.get('group_id'),
+                             enable_auto_commit=True,
+                             auto_offset_reset='latest',
                              value_deserializer=lambda v: json.loads(v).encode('utf-8'))
     lg.info('Start susbscribe on topic ')
     #consumer.subscribe(topic)
     return consumer
 
-
+#ToDo here is a bug that we reed data from the very beggining
+#It might be save somewhere in DB or could find better solution of it
 def transfer_message(lg):
     conf_data = get_config.get_monitor_data()
     consumer = get_consumer(lg, conf_data.get('kafka'))
@@ -36,6 +39,9 @@ def transfer_message(lg):
     consumer.seek_to_end(topic_partion)
     last_offset = consumer.position(topic_partion)
     consumer.seek_to_beginning(topic_partion)
+    #consumer.seek_to_end(topic_partion)
+    #consumer.poll()
+    #consumer.seek_to_end()
     try:
         for msg in consumer:
             print('-- start getting messages ---')
@@ -64,5 +70,5 @@ class MonitorDataReader:
         transfer_message(logger)
 
 
-data_reader = MonitorDataReader()
-data_reader.run()
+#data_reader = MonitorDataReader()
+#data_reader.run()

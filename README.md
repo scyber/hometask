@@ -18,3 +18,6 @@ $ virtualenv task_env
 $ source task_env/bin/activate
 
 # Next you need add all extra libraries to the project from pip or from ide per request
+How to run
+python main reader/monitor
+

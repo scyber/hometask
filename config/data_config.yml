@@ -12,3 +12,6 @@ db_items:
   db_user_name: 'avnadmin'
   db_password: 'czjhp0eku8ovuoiz'
   db_name: 'defaultdb'
+run_params:
+  minutes: 1
+

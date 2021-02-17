@@ -3,7 +3,6 @@ from tools import get_config
 from kafka import KafkaProducer
 from datetime import datetime
 from tools.data import Message
-import threading
 
 
 def get_producer(lg, data):
@@ -48,15 +47,11 @@ def process_sites(self, lg, sites_in):
 
 
 class SiteMonitor:
-
-    # ToDo just implement something to get from data it could be better it depends on case
-    # ToDo create main run meithod with interval monitoring
     def run(self):
         logging.basicConfig(level=logging.INFO)
-        logger = logging.getLogger('Writer logger')
-        sites = get_config.get_url_data()
-        process_sites(self, logger, sites)
-
-
-#site_mon = SiteMonitor()
-#site_mon.run()
+        logger = logging.getLogger('Site Monitor logger')
+        try:
+            sites = get_config.get_url_data()
+            process_sites(self, logger, sites)
+        except Exception as e:
+            logger.error(e.with_traceback())

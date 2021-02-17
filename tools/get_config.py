@@ -24,3 +24,4 @@ def get_url_data():
             return url_data
     except Exception as ex:
         loger.error(ex.args)
+
